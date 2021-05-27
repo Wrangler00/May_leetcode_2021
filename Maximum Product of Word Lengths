@@ -75,3 +75,46 @@ public:
         return ans;
     }
 };
+
+//solution 3
+class Solution {
+public:
+    int maxProduct(vector<string>& w) {
+        int n = w.size();
+        int ans=0;
+        vector<int> b(n);
+        
+        for(int i=0;i<n;i++) 
+            for(char c:w[i])    
+                b[i] |= 1<<(c-'a');
+        
+        for(int i=0;i<n;i++){
+            for(int j=0;j<n;j++){
+                if(!(b[i]&b[j]))
+                    ans = max(ans,(int)w[i].length()*(int)w[j].length());
+            }
+        }
+        
+        return ans;
+    }
+};
+
+//solution 4 //fastest 32 ms
+
+class Solution {
+public:
+    int maxProduct(vector<string>& words) {
+        unordered_map<int,int> maxlen;
+        int result = 0;
+        for (string word : words) {
+            int mask = 0;
+            for (char c : word)
+                mask |= 1 << (c - 'a');
+            maxlen[mask] = max(maxlen[mask], (int) word.size());
+            for (auto maskAndLen : maxlen)
+                if (!(mask & maskAndLen.first))
+                    result = max(result, (int) word.size() * maskAndLen.second);
+        }
+        return result;
+    }
+};
