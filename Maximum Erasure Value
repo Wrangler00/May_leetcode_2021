@@ -1,0 +1,66 @@
+You are given an array of positive integers nums and want to erase a subarray containing unique elements. The score you get by erasing the subarray is equal to the sum of its elements.
+
+Return the maximum score you can get by erasing exactly one subarray.
+
+An array b is called to be a subarray of a if it forms a contiguous subsequence of a, that is, if it is equal to a[l],a[l+1],...,a[r] for some (l,r).
+
+ 
+
+Example 1:
+
+Input: nums = [4,2,4,5,6]
+Output: 17
+Explanation: The optimal subarray here is [2,4,5,6].
+Example 2:
+
+Input: nums = [5,2,1,2,5,2,1,2,5]
+Output: 8
+Explanation: The optimal subarray here is [5,2,1] or [1,2,5].
+ 
+
+Constraints:
+
+1 <= nums.length <= 105
+1 <= nums[i] <= 104
+
+//cpp my solution
+//O(n)
+
+class Solution {
+public:
+    int maximumUniqueSubarray(vector<int>& a) {
+        unordered_map<int,int> mp;
+        int sz = a.size();
+        int ans=0,sum_till_now=0,start=0;
+        vector<int> sums(sz);
+        
+        sums[0]=a[0];
+        
+        for(int i=1;i<sz;i++)   sums[i] = sums[i-1]+a[i];
+        
+        for(int i=0;i<sz;i++){
+            if(mp.find(a[i])==mp.end()){
+                sum_till_now+=a[i];
+                mp[a[i]] = i;
+            }else{
+                int ind = mp.at(a[i]);
+                ans = max(ans,sum_till_now);
+                
+                if(ind<start){
+                    sum_till_now+=a[i];
+                }else{
+                    sum_till_now = sums[i]-sums[ind];    
+                    start=ind;
+                }
+            
+                mp[a[i]] = i;
+            }
+            
+            if(i==sz-1){
+                ans = max(ans,sum_till_now);
+            }
+        }
+        
+        return ans;
+    }
+};
