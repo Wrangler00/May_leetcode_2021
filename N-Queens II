@@ -1,0 +1,81 @@
+The n-queens puzzle is the problem of placing n queens on an n x n chessboard such that no two queens attack each other.
+
+Given an integer n, return the number of distinct solutions to the n-queens puzzle.
+
+ 
+
+Example 1:
+
+
+Input: n = 4
+Output: 2
+Explanation: There are two distinct solutions to the 4-queens puzzle as shown.
+Example 2:
+
+Input: n = 1
+Output: 1
+ 
+
+Constraints:
+
+1 <= n <= 9
+
+//cpp my solution
+
+class Solution {
+    int ans=0;
+    int n;
+public:
+    void place(int row,vector<pair<int,int>> &pos,vector<bool> &col){
+        if(row>=n)  {
+            ++ans;
+            return;
+        }
+        int rs,cs;
+        
+        for(int c=0;c<n;c++){
+            if(col[c])  continue;
+            
+            rs=row-1,cs=c-1;
+            while(rs>=0 && cs>=0){
+                pair<int,int> p = pos[rs];
+                if(p.first==rs && p.second==cs) break;
+                --rs,--cs;
+            }
+            if(rs>=0 && cs>=0)  continue;
+            
+            rs=row-1,cs=c+1;
+            while(rs>=0 && cs<n){
+                pair<int,int> p = pos[rs];
+                if(p.first==rs && p.second==cs) break;
+                --rs,++cs;
+            }
+            if(rs>=0 && cs<n)
+                continue;
+            
+            pos.push_back({row,c});
+            col[c]=1;
+            
+            place(row+1,pos,col);
+            
+            pos.pop_back();
+            col[c]=0;
+        }
+    }
+    int totalNQueens(int nn) {
+        n=nn;
+        vector<pair<int,int>> pos;
+        vector<bool> col(n,false);
+        place(0,pos,col);
+        return ans;
+    }
+};
+
+
+//hardcoded solution
+class Solution {
+public:
+    int totalNQueens(int n) {
+        return vector<int>({0,1,0,0,2,10,4,40,92,352})[n];
+    }
+};
